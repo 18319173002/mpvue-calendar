@@ -383,12 +383,12 @@
         });
         if (this.range) {
           const lastDay = new Date(year, month + 1, 0).getDate() === i ? {lastDay: true} : null;
-          const options = Object.assign(
-            {day: i},
-            this.getLunarInfo(year, month + 1, i),
-            this.getEvents(year, month + 1, i),
-            lastDay
-          );
+          const options = {
+            day: i,
+            ...this.getLunarInfo(year, month + 1, i),
+            ...this.getEvents(year, month + 1, i),
+            ...lastDay
+          };
           const {date, day} = options;
           const copyRangeBegin = this.rangeBegin.concat();
           const copyRangeEnd = this.rangeEnd.concat();
@@ -437,17 +437,19 @@
         if (this.multi) {
           let options;
           if (this.value.find(v => year === v[0] && (month === v[1] - 1) && i === v[2])) {
-            options = Object.assign(
-              {day: i, selected: true},
-              this.getLunarInfo(year, month + 1, i),
-              this.getEvents(year, month + 1, i)
-            );
+            options = {
+              day: i,
+selected: true,
+              ...this.getLunarInfo(year, month + 1, i),
+              ...this.getEvents(year, month + 1, i)
+            };
           } else {
-            options = Object.assign(
-              {day: i, selected: false},
-              this.getLunarInfo(year, month + 1, i),
-              this.getEvents(year, month + 1, i)
-            );
+            options = {
+              day: i,
+selected: false,
+              ...this.getLunarInfo(year, month + 1, i),
+              ...this.getEvents(year, month + 1, i)
+            };
             if (this.begin.length) {
               const beginTime = +new Date(parseInt(this.begin[0], 10), parseInt(this.begin[1], 10) - 1, parseInt(this.begin[2], 10));
               if (beginTime > +(new Date(year, month, i))) {
@@ -560,9 +562,9 @@
               if (vv.date === value.date) {
                 vv.className = value.className;
                 vv.content = value.content;
-                vv.callback = ()=>{
-                  value.callback&&value.callback;
-                }
+                vv.callback = () => {
+                  value.callback&&value.callback();
+                };
                 return true;
               }
             }));
@@ -683,11 +685,13 @@
             temp[completionIndex] = [];
             const start = nextMonthPushDays + (completionIndex - line - 1) * 7;
             for (let d = start; d <= start + 6; d++) {
-              temp[completionIndex].push(Object.assign(
-                {day: d, disabled: true, nextMonth: true},
-                this.getLunarInfo(this.computedNextYear(), this.computedNextMonth(true), d),
-                this.getEvents(this.computedNextYear(), this.computedNextMonth(true), d)
-              ));
+              temp[completionIndex].push({
+                day: d,
+disabled: true,
+nextMonth: true,
+                ...this.getLunarInfo(this.computedNextYear(), this.computedNextMonth(true), d),
+                ...this.getEvents(this.computedNextYear(), this.computedNextMonth(true), d)
+              });
             }
           }
         }
