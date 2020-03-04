@@ -560,6 +560,9 @@
               if (vv.date === value.date) {
                 vv.className = value.className;
                 vv.content = value.content;
+                vv.callback = ()=>{
+                  value.callback&&value.callback;
+                }
                 return true;
               }
             }));
